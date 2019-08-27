@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tv_shape;
-    private TextView tv_result;
+    private TextView tv_areaResult;
     private Button button_calculate;
     private Button button_clear;
     private ImageView iv_triangle;
@@ -21,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_length1;
     private EditText et_length2;
     private String selectedShape;
-    double length1 = 0.0;
-    double length2 = 0.0;
+    double length1;
+    double length2;
+    double result;
 
 
     @Override
@@ -37,19 +38,21 @@ public class MainActivity extends AppCompatActivity {
         iv_square = findViewById(R.id.iv_square);
         iv_circle = findViewById(R.id.iv_circle);
         tv_shape = findViewById(R.id.tv_shapeSelection);
-        tv_result = findViewById(R.id.tv_result);
+        tv_areaResult = findViewById(R.id.tv_result);
         button_calculate = findViewById(R.id.button_calculate);
         button_clear = findViewById(R.id.button_clear);
 
         clearButton();
 
-        String tempLength1 = et_length1.getText().toString();
-        String tempLength2 = et_length2.getText().toString();
-
-        if(tempLength1 != null && tempLength1.equals(""))
-            length1 = Float.parseFloat(tempLength1);
-        if(tempLength2 != null && tempLength2.equals(""))
-            length2 = Float.parseFloat(tempLength2);
+//        String tempLength1 = et_length1.getText().toString();
+//        String tempLength2 = et_length2.getText().toString();
+//
+//        if(tempLength1 != null && !tempLength1.equals("")) {
+//            length1 = Double.parseDouble(tempLength1);
+//        }
+//        if(tempLength2 != null && !tempLength2.equals("")) {
+//            length2 = Double.parseDouble(tempLength2);
+//        }
 
         button_clear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,26 +71,62 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // add square and circle
+        iv_square.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedShape = "square";
+                tv_shape.setText("Square");
+                et_length1.setVisibility(View.VISIBLE);
+                et_length2.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        iv_circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedShape = "circle";
+                tv_shape.setText("Circle");
+                et_length1.setVisibility(View.VISIBLE);
+                et_length2.setVisibility(View.INVISIBLE);
+            }
+        });
 
         button_calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String tempLength1 = et_length1.getText().toString();
+                String tempLength2 = et_length2.getText().toString();
+
+                if(tempLength1 != null && !tempLength1.equals("")) {
+                    length1 = Double.parseDouble(tempLength1);
+                }
+                if(tempLength2 != null && !tempLength2.equals("")) {
+                    length2 = Double.parseDouble(tempLength2);
+                }
+
                 if(et_length1.getText().toString().equals("")){
                     et_length1.setError("Value Needed");
                 }
                 if(et_length2.getText().toString().equals("")){
                     et_length2.setError("Value Needed");
                 }
-
-
-                // add check if a shape has been selected
-
-
+                if(selectedShape == "none"){
+                    et_length1.setError("Shape Needed");
+                    et_length2.setError("Shape Needed");
+                }
                 switch (selectedShape) {
                     case "triangle":
-                        double result = 0.5*length1*length2;
-                        tv_result.setText(result+"");
+                        double result = (length1 * length2)*(0.5);
+                        tv_areaResult.setText("The area is: " + result);
+                        break;
+                    case "square":
+                        result = length1 * length1;
+                        tv_areaResult.setText("The area is: " + result);
+                        break;
+                    case "circle":
+                        result = 2 * length1 * 3.1416;
+                        tv_areaResult.setText("The area is: " + result);
+                        break;
                 }
             }
         });
@@ -101,11 +140,8 @@ public class MainActivity extends AppCompatActivity {
         et_length1.setText("");
         et_length2.setText("");
         tv_shape.setText("Select A Shape");
-        tv_result.setText("");
+        tv_areaResult.setText("");
         selectedShape = "none";
-//        iv_triangle.setVisibility(View.VISIBLE);
-//        iv_square.setVisibility(View.VISIBLE);
-//        iv_circle.setVisibility(View.VISIBLE);
 
     }
 
